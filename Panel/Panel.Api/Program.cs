@@ -1,7 +1,16 @@
-
+using Microsoft.EntityFrameworkCore;
+using Panel.Api.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "Connection string 'DefaultConnection' is not configured. Set it in .NET User Secrets for development or the ConnectionStrings__DefaultConnection environment variable."
+    );
+}
 
 builder.Services.AddCors(options =>
 {
@@ -13,6 +22,10 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
+builder.Services.AddDbContext<PanelDbContext>(options =>
+    options.UseNpgsql(connectionString)
+);
 
 var app = builder.Build();
 

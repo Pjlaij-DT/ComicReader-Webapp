@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Panel.Api.Models;
+using Panel.Api.Dtos;
 
 namespace Panel.Api.Controllers;
 
@@ -7,9 +7,9 @@ namespace Panel.Api.Controllers;
 [Route("api/[controller]")]
 public class ComicsController : ControllerBase
 {
-    private static readonly List<Comic> Comics = 
+    private static readonly List<ComicResponseDto> Comics =
     [
-        new Comic
+        new ComicResponseDto
         {
             Id = 1,
             Title = "New Comic Test",
@@ -17,9 +17,9 @@ public class ComicsController : ControllerBase
             CoverImageUrl = "/images/sample-cover.jpg",
             Author = "DemoAuthor",
             Status = "Ongoing",
-            Genres = {"Action", "Adventure"}
+            Genres = ["Action", "Adventure"]
         },
-        new Comic
+        new ComicResponseDto
         {
             Id = 2,
             Title = "The Last Kingdom",
@@ -27,18 +27,18 @@ public class ComicsController : ControllerBase
             CoverImageUrl = "/images/kingdom-cover.jpg",
             Author = "Demo Author",
             Status = "Completed",
-            Genres = {"Action", "Adventure"}
+            Genres = ["Action", "Adventure"]
         }
     ];
 
     [HttpGet]
-    public ActionResult<IEnumerable<Comic>> GetComics()
+    public ActionResult<IEnumerable<ComicResponseDto>> GetComics()
     {
         return Ok(Comics);
     }
 
     [HttpGet("{id:int}")]
-    public ActionResult<Comic> GetComic(int id)
+    public ActionResult<ComicResponseDto> GetComic(int id)
     {
         var comic = Comics.FirstOrDefault(c =>  c.Id == id);
         if (comic is null)
